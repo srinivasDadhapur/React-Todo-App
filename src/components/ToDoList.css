@@ -109,18 +109,45 @@
   font-size: 12px;
   font-weight: bold;
 }
+
+.todo-item input[type="text"] {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  outline: none;
+}
+
+.todo-item input[type="text"]:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
 .todo-delete-btn{
   cursor: pointer;
 }
-.todo-add-btn{
+.todo-add-btn {
   cursor: pointer;
   border: 1px solid var(--border);
-  width: 30px;
-  height: 30px;
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.todo-add-btn:hover {
+  background: var(--hover-bg);
+  border-color: var(--primary);
 }
 .todo-edit-btn{
   cursor: pointer;

@@ -1,16 +1,20 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import type { LoginCredentials } from '../types';
 import { LogIn, Moon, Sun } from 'lucide-react';
 import './LoginForm.css';
 
-export const LoginForm = () => {
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
-  const [loading, setLoading] = useState(false);
+export const LoginForm: React.FC = () => {
+  const [credentials, setCredentials] = useState<LoginCredentials>({ 
+    username: '', 
+    password: '' 
+  });
+  const [loading, setLoading] = useState<boolean>(false);
   const { login } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     
@@ -25,29 +29,35 @@ export const LoginForm = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    setCredentials({
-      ...credentials,
-      [e.target.name]: e.target.value
-    });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setCredentials(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   return (
     <div className="login-container">
       <div className="theme-toggle">
-        <button onClick={toggleTheme} className="theme-btn">
+        <button 
+          onClick={toggleTheme} 
+          className="theme-btn"
+          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          type="button"
+        >
           {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
         </button>
       </div>
       
       <div className="login-card">
         <div className="login-header">
-          <LogIn size={32} />
-          <h1>Dashboard Login</h1>
-          <p>Enter your credentials to access the dashboard</p>
+          <LogIn size={32} aria-hidden="true" />
+          <h1>Todos Login</h1>
+          <p>Enter your credentials to access the Todos</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="login-form" noValidate>
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
@@ -58,6 +68,8 @@ export const LoginForm = () => {
               onChange={handleInputChange}
               placeholder="Enter your username"
               required
+              disabled={loading}
+              aria-describedby="username-error"
             />
           </div>
           
@@ -71,10 +83,17 @@ export const LoginForm = () => {
               onChange={handleInputChange}
               placeholder="Enter your password"
               required
+              disabled={loading}
+              aria-describedby="password-error"
             />
           </div>
           
-          <button type="submit" disabled={loading} className="login-btn">
+          <button 
+            type="submit" 
+            disabled={loading || !credentials.username || !credentials.password} 
+            className="login-btn"
+            aria-describedby="login-status"
+          >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
